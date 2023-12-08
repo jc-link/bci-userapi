@@ -1,9 +1,10 @@
 package com.jcdev.userapi.domain.service;
 
 import com.jcdev.userapi.domain.entity.User;
+import com.jcdev.userapi.domain.model.UserResponse;
 
 public interface UserService {
-    User create(User user);
+    UserResponse create(User user);
     User findByEmail(String email);
 
     User update(User user);
