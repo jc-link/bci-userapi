@@ -1,10 +1,12 @@
 package com.jcdev.userapi.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
-
+import javax.validation.constraints.NotEmpty;
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -17,15 +19,23 @@ public class User {
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
+
+    @NotEmpty(message = "Name is required")
     private String name;
 
+    @NotEmpty(message = "Email is required")
+    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+\\..+)$", message = "Invalid email format")
     @Column(unique = true)
     private String email;
+
+    @NotEmpty(message = "Password is required")
+    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d.*\\d).+$", message = "Password must contain at least one uppercase letter, one lowercase letter, and two digits")
     private String password;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Phone> phones;
 
+    @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime created;
 
@@ -33,9 +43,13 @@ public class User {
     @Column(name = "modified_at")
     private LocalDateTime modified;
 
+    @JsonProperty("lastlogin")
+    @CreationTimestamp
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
+
+    @JsonProperty("isactive")
     @Column(name = "is_active")
     private boolean isActive;
 
@@ -46,9 +60,6 @@ public class User {
         this.name = name;
         this.email = email;
         this.password = password;
-        this.isActive = true;
-        this.created = LocalDateTime.now();
-        this.lastLogin = LocalDateTime.now();
     }
 
     public UUID getId() {
@@ -115,11 +126,11 @@ public class User {
         this.lastLogin = lastLogin;
     }
 
-    public boolean isActive() {
+    public boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setIsActive(boolean isActive) {
+        this.isActive = isActive;
     }
 }

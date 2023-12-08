@@ -1,4 +1,6 @@
 package com.jcdev.userapi.domain.entity;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import javax.persistence.*;
 
 
@@ -11,13 +13,12 @@ public class Phone {
 
     private String number;
 
+    @JsonProperty("citycode")
     private String cityCode;
 
+    @JsonProperty("countrycode")
     private String countryCode;
 
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
 
     public Phone() {
     }
@@ -60,12 +61,5 @@ public class Phone {
         this.countryCode = countryCode;
     }
 
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
 }
