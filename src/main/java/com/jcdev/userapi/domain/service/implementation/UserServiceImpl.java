@@ -2,6 +2,7 @@ package com.jcdev.userapi.domain.service.implementation;
 
 import com.jcdev.userapi.domain.entity.AuthenticationToken;
 import com.jcdev.userapi.domain.entity.User;
+import com.jcdev.userapi.domain.exception.EmailAlreadyExistsException;
 import com.jcdev.userapi.domain.model.UserResponse;
 import com.jcdev.userapi.domain.service.AuthenticationTokenService;
 import com.jcdev.userapi.domain.service.UserService;
@@ -11,11 +12,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("userService")
 public class UserServiceImpl implements UserService {
     @Autowired
     @Qualifier("userRepository")
     private UserRepository userRepository;
+
 
     @Autowired
     @Qualifier("authenticationTokenService")
@@ -23,11 +27,9 @@ public class UserServiceImpl implements UserService {
     
     @Override
     public UserResponse create(User user) {
-        if (isEmailAlreadyInUse(user.getEmail())) {
-            throw new IllegalArgumentException("Email already in use");
-        }
+        isEmailAlreadyInUse(user.getEmail());
         user.setIsActive(true);
-        user.setPassword(BCrypt.hashpw(user.getPassword(), BCrypt.gensalt()));
+        user.setPassword(hashPassword(user.getPassword()));
         try {
            User savedUser = userRepository.save(user);
            return tokenCreation(savedUser);
@@ -53,8 +55,8 @@ public class UserServiceImpl implements UserService {
         return userRepository.save(user);
     }
 
-    boolean isEmailAlreadyInUse(String email) {
-        return this.findByEmail(email) != null;
+    void isEmailAlreadyInUse(String email) {
+        if (this.findByEmail(email) != null) throw new EmailAlreadyExistsException("Email already in use");
     }
 
     UserResponse tokenCreation(User user) {
@@ -64,6 +66,10 @@ public class UserServiceImpl implements UserService {
 
     public boolean validatePassword(String password, String hashedPassword) {
         return BCrypt.checkpw(password, hashedPassword);
+    }
+
+    String hashPassword(String password) {
+        return BCrypt.hashpw(password, BCrypt.gensalt());
     }
 
     UserResponse mapUserResponse(User user, String token) {
@@ -80,4 +86,5 @@ public class UserServiceImpl implements UserService {
                 token
         );
     }
+
 }
