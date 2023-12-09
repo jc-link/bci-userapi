@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 @Service("authenticationTokenService")
-public class AuthenticationTokenImpl implements AuthenticationTokenService {
+public class AuthenticationTokenServiceImpl implements AuthenticationTokenService {
     @Autowired
     @Qualifier("authenticationTokenRepository")
     private AuthenticationTokenRepository authenticationTokenRepository;
@@ -18,9 +18,13 @@ public class AuthenticationTokenImpl implements AuthenticationTokenService {
 
     @Override
     public AuthenticationToken create(User user) {
-        String token = generateToken(user.getEmail());
-        AuthenticationToken authToken = new AuthenticationToken(user, token);
+        AuthenticationToken authToken = createAuthenticationToken(user);
         return authenticationTokenRepository.save(authToken);
+    }
+
+    AuthenticationToken createAuthenticationToken(User user) {
+        String token = generateToken(user.getEmail());
+        return new AuthenticationToken(user, token);
     }
 
     public String generateToken(String email) {
