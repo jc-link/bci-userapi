@@ -1,4 +1,4 @@
-#User API
+# User API
 # RESTful API proyect created with SpringBoot.
 The API can register and authenticate users using in memory database H2.
 
@@ -19,6 +19,8 @@ To build the project, run the following command at the root of the project:
 ```bash
 ./gradlew build
 ```
+
+## Running
 
 To create the project image and execute it in a docker container run the following command:
 
