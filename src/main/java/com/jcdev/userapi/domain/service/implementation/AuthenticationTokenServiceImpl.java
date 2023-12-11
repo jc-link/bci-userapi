@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service("authenticationTokenService")
 public class AuthenticationTokenServiceImpl implements AuthenticationTokenService {
     @Autowired
@@ -18,13 +20,24 @@ public class AuthenticationTokenServiceImpl implements AuthenticationTokenServic
 
     @Override
     public AuthenticationToken create(User user) {
+        deleteToken(user);
         AuthenticationToken authToken = createAuthenticationToken(user);
         return authenticationTokenRepository.save(authToken);
     }
 
+
     AuthenticationToken createAuthenticationToken(User user) {
         String token = generateToken(user.getEmail());
         return new AuthenticationToken(user, token);
+    }
+
+    void deleteToken(User user) {
+        AuthenticationToken token = findByUser(user);
+        if (token != null) authenticationTokenRepository.delete(token);
+    }
+
+    AuthenticationToken findByUser(User user) {
+        return authenticationTokenRepository.findByUser(user);
     }
 
     public String generateToken(String email) {

@@ -1,4 +1,4 @@
-package com.jcdev.userapi.domain.model;
+package com.jcdev.userapi.domain.dto;
 
 import com.jcdev.userapi.domain.entity.Phone;
 

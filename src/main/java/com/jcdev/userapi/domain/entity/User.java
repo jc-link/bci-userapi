@@ -20,17 +20,12 @@ public class User {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @NotEmpty(message = "Name is required")
     private String name;
 
-    @NotEmpty(message = "Email is required")
-    @Pattern(regexp = "^[A-Za-z0-9+_.-]+@(.+\\..+)$", message = "Invalid email format")
     @Column(unique = true)
     private String email;
 
-    @NotEmpty(message = "Password is required")
-    @Pattern(regexp = "^(?=.*[A-Z])(?=.*[a-z])(?=.*\\d.*\\d).+$", message = "Password must contain at least one uppercase letter, one lowercase letter, and two digits")
-    private String password;
+   private String password;
 
     @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Phone> phones;
@@ -43,23 +38,22 @@ public class User {
     @Column(name = "modified_at")
     private LocalDateTime modified;
 
-    @JsonProperty("lastlogin")
     @CreationTimestamp
     @Column(name = "last_login")
     private LocalDateTime lastLogin;
 
 
-    @JsonProperty("isactive")
     @Column(name = "is_active")
     private boolean isActive;
 
     public User() {
     }
 
-    public User(String name, String email, String password) {
+    public User(String name, String email, String password, List<Phone> phones) {
         this.name = name;
         this.email = email;
         this.password = password;
+        this.phones = phones;
     }
 
     public UUID getId() {

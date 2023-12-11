@@ -1,6 +1,8 @@
 package com.jcdev.userapi.controller;
 
 import com.jcdev.userapi.domain.exception.EmailAlreadyExistsException;
+import com.jcdev.userapi.domain.exception.EmailNotFoundException;
+import com.jcdev.userapi.domain.exception.InvalidPasswordException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -28,6 +30,20 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<Map<String, String>> handleEmailAlreadyExistsException(EmailAlreadyExistsException e) {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("mensaje", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
+
+    @ExceptionHandler(EmailNotFoundException.class)
+    public ResponseEntity<Map<String, String>> handleEmailNotFoundException(EmailNotFoundException e) {
+        Map<String, String> responseBody = new HashMap<>();
+        responseBody.put("mensaje", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);
+    }
+
+    @ExceptionHandler(InvalidPasswordException.class)
+    public ResponseEntity<Map<String, String>> handleInvalidPasswordException(InvalidPasswordException e) {
         Map<String, String> responseBody = new HashMap<>();
         responseBody.put("mensaje", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(responseBody);

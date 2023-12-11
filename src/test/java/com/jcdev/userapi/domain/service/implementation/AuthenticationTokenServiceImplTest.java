@@ -10,6 +10,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -26,7 +28,7 @@ class AuthenticationTokenServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        user = new User("test user", "user@mail.com", "123456");
+        user = new User("test user", "user@mail.com", "123456", new ArrayList<>());
     }
 
     @Test
@@ -48,6 +50,7 @@ class AuthenticationTokenServiceImplTest {
     @Test
     void createAuthenticationToken() {
         AuthenticationToken result = authenticationTokenService.createAuthenticationToken(user);
+
         assertEquals(user, result.getUser());
         assertNotNull(result.getToken());
     }
