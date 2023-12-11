@@ -1,17 +1,19 @@
 package com.jcdev.userapi.domain.service;
 
+import com.jcdev.userapi.domain.dto.UserDto;
 import com.jcdev.userapi.domain.entity.User;
-import com.jcdev.userapi.domain.model.UserResponse;
-
-import java.util.List;
+import com.jcdev.userapi.domain.dto.UserResponse;
+import com.jcdev.userapi.domain.dto.UserToken;
 
 public interface UserService {
-    UserResponse create(User user);
+    UserResponse create(UserDto userDto);
     User findByEmail(String email);
 
     User update(User user);
 
     User setInactive(User user);
+
+    UserToken signIn(UserDto userDto);
 
 
 }
